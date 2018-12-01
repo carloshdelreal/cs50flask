@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+{% block head %}
+   <title>Reabc</title>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-8 col-sm-8 col-md-6 col-lg-6">
+            
+            <div class="well">
+                <h1>Welcome {{ session['username'] }}</h1>
+                <p> it is so nice to see you again!! </p>
+            </div>
+            
+             
+        </div>
+    </div>
+</div>
+{% endblock  %}
