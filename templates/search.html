@@ -1,0 +1,74 @@
+{% extends 'layout.html' %}
+{% block head %}
+   <title>Reabc Search</title>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-10 col-md-8 col-lg-8">
+            
+            <div class="row">
+                <div class="well well-sm">
+                    <h1>Search</h1>
+                    <p> type the ISBN of the book you are looking for </p>
+                </div>        
+            </div>
+            <div class="row">
+                <form action="" method="POST" class="form-inline" role="form">
+            
+                    <div class="form-group">
+                        
+                        <label class="sr-only" for="search">search</label>
+                        <input type="text" class="form-control" name="search" id="search" placeholder="what are you looking for?">
+                    </div>
+                
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+             
+        </div>
+    </div>
+    {% if results==None %}
+    
+    {% elif results|length > 1 %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-10 col-md-8 col-lg-8">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Isbn</th><th>Title</th><th>Author</th><th>year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in results %}
+                            <tr><td>{{ row[0] }}</td><td>{{ row[1].title() }}</td><td>{{ row[2].title() }}</td><td>{{ row[3] }}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% elif results|length == 0 %}
+    <div class="col-xs-12 col-sm-10 col-md-8 col-lg-8">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Isbn</th><th>Title</th><th>Author</th><th>year</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                        <tr><td> Sorry :( there where no matches</td></tr>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+
+
+{% endblock  %}

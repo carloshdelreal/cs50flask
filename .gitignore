@@ -5,4 +5,3 @@ src3
 static/style.css.map
 static/style.scss
 flask_session*
-history.sql

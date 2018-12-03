@@ -4,7 +4,13 @@
 {% endblock %}
 {% block body %}
     <h1> Welcome to Reabc </h1>
+    {% if 'username' in session %}
+    <p>
+        the books place. <a href="/search">search</a> to see your favorite books
+    </p>
+    {% else %}
     <p>
         the books place. <a href="/login">log in</a> to see your favorite books
     </p>
+    {% endif %}
 {% endblock  %}

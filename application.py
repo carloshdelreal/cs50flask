@@ -5,6 +5,7 @@ from flask_session import Session
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
+from functools import wraps
 
 app = Flask(__name__)
 
@@ -58,6 +59,19 @@ def register():
             return render_template("error.html", message=f"The user {user} already exists" )
         return render_template("error.html", message="no fue posible guardar los datos en el servidor" )
 
+
+#from flask import g, request, redirect, url_for
+##The decorator for restricting views to loggedin users
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' in session:
+            return f(*args, **kwargs)
+        else:
+            return redirect(url_for('login', next=request.url))
+
+    return decorated_function
+
 @app.route("/login", methods=["POST", "GET"])
 def login():
     if request.method == "GET":
@@ -87,3 +101,22 @@ def loggedout():
 @app.route("/loggedin")
 def loggedin():
     return render_template("loggedin.html")
+
+######
+
+@app.route("/search", methods=["POST", "GET"])
+@login_required
+def search():
+    if request.method == "GET":
+        return render_template("search.html", results=None)
+    if request.method == "POST":
+        #print(request.form['search'])
+        try:
+            year = int(request.form['search'])
+            results = db.execute("SELECT * FROM books WHERE (year = :year)", { "year": year})
+        except ValueError:
+            results = db.execute("SELECT * FROM books WHERE (title LIKE :search OR author LIKE :search OR isbn LIKE :search )",
+                    { "search": "%"+str(request.form['search']).lower()+"%" }).fetchall()
+        print(results) #OR title LIKE :search OR author LIKE :search
+        return render_template("search.html",results=results)
+
