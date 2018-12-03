@@ -80,8 +80,28 @@
             </div>
         </div>
     </div>
-
-    
+    {% if message %}
+        {% if message['type']=="success" %}
+            <div class="alert alert-success">
+                <strong>Success!</strong> {{ message['message'] }}
+            </div>
+        {% endif %}
+        {% if message['type']=="info" %}
+            <div class="alert alert-info">
+                <strong>Info!</strong> {{ message['message'] }}
+            </div>
+        {% endif %}
+        {% if message['type']=='warning' %}
+            <div class="alert alert-warning">
+                <strong>Warning!</strong> {{ message['message'] }}
+            </div>
+        {% endif %}
+        {% if message['type']=='danger' %}
+            <div class="alert alert-danger">
+                <strong>Danger!</strong> {{ message['message'] }}
+            </div>
+        {% endif %}
+    {% endif %}
     <div class="container">
         <div class="row">
             <div class="col-lg-10 col-lg-offset-1">

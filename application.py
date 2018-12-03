@@ -44,7 +44,7 @@ def register():
         #check if there is a user already logged in
         if 'username' in session:
             user = session['username']
-            return render_template('error.html', message= f"The user {user} is logged in")
+            return render_template('error.html', message= { "message": f"The user {user} is logged in", "type": "info" })
         
         #check if the user is already in the database
         if db.execute("SELECT * FROM users WHERE username = :user",{"user": user}).rowcount == 0:
@@ -56,10 +56,8 @@ def register():
             db.execute("INSERT INTO users ( name, email, username, password) VALUES (:name, :email, :username, :password )",
                     { "name": name, "email": email, "username": user, "password": hashed_value } )
             db.commit()
-            return render_template("registered.html")
-        else:
-            return render_template("error.html", message=f"The user {user} already exists" )
-        return render_template("error.html", message="no fue posible guardar los datos en el servidor" )
+            return render_template("registered.html",  message={ "message": "You have been registered successfully", "type": "success" })
+        return render_template("error.html", message={ "message": "no fue posible guardar los datos en el servidor", "type": "warning" } )
 
 
 #from flask import g, request, redirect, url_for
@@ -84,12 +82,12 @@ def login():
     if request.method == "POST":
         userdata = db.execute("SELECT * FROM users WHERE username = :user", {"user": request.form['user']}).fetchone()
         if userdata == None:
-            return render_template('error.html', message="your password is not correct")
+            return render_template('error.html', message={ "message": "your username or password is not correct", "type": "warning" } )
         elif check_password_hash(userdata[4], request.form['password']):
             session['username'] = userdata[1]
-            return render_template('loggedin.html')
+            return render_template('loggedin.html', message={ "message": "You have succesfully logged in!", "type": "success" })
         else:
-            return render_template('error.html', message="your password is not correct")
+            return render_template('error.html', message={ "message": "your username or password is not correct", "type": "warning" })
 
 
 @app.route("/logout")
@@ -99,11 +97,11 @@ def logout():
 
 @app.route("/loggedout")
 def loggedout():
-    return render_template("loggedout.html")
+    return render_template("loggedout.html", message={ "message": "You have logged out", "type": "info" })
 
 @app.route("/loggedin")
 def loggedin():
-    return render_template("loggedin.html")
+    return render_template("loggedin.html",  message={ "message": "You have successfully logged in", "type": "success" })
 
 ######
 
@@ -114,14 +112,15 @@ def search():
         return render_template("search.html", results=None)
     if request.method == "POST":
         #print(request.form['search'])
+        #try for the case of typing the year
         try:
             year = int(request.form['search'])
             results = db.execute("SELECT * FROM books WHERE (year = :year) ORDER BY title", { "year": year}).fetchall()
         except ValueError:
             results = db.execute("SELECT * FROM books WHERE (title LIKE :search OR author LIKE :search OR isbn LIKE :search )",
                     { "search": "%" + str(request.form['search']).lower() + "%" }).fetchall()
-        print(results) #OR title LIKE :search OR author LIKE :search
-        return render_template("search.html",results=results)
+        #print(results) #OR title LIKE :search OR author LIKE :search
+        return render_template("search.html",results=results,  message={ "message": "The searching proccess was succesful!", "type": "info" })
 
 @app.route("/book/<string:isbn>", methods=["POST", "GET"])
 @login_required
@@ -131,7 +130,7 @@ def book(isbn):
     bookdata_GR = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": KEY, "isbns": isbn })
     review = db.execute("SELECT * FROM reviews WHERE username = :username AND isbn = :isbn", { "username": session['username'], "isbn": isbn }).fetchone()
     if bookdata == None:
-        return render_template("error.html", message="The book you are looking for it does not exists")
+        return render_template("error.html", message={ "message": "The book you are looking for it does not exists", "type": "warning" })
     if request.method == "GET" :
         return render_template("book.html", bookdata_GR=bookdata_GR.json()["books"][0], bookdata=bookdata, review=review)
     elif request.method == "POST":
@@ -140,9 +139,13 @@ def book(isbn):
             db.execute("INSERT INTO reviews ( isbn, username, review, rate) VALUES (:isbn, :username, :review, :rate )",
                         { "isbn": isbn, "username": session['username'], "review": request.form['review'], "rate": request.form['rate'] } )
             db.commit()
+            message={ "message": "Your review has been submited", "type": "success" }
         else:
             db.execute("UPDATE reviews SET review = :review, rate = :rate WHERE username = :username AND isbn = :isbn",
                         { "isbn": isbn, "username": session['username'], "review": request.form['review'], "rate": request.form['rate'] } )
             db.commit()
-        return render_template("book.html", bookdata_GR=bookdata_GR.json()["books"][0], bookdata=bookdata, review={ "review": request.form['review'], "rate": int(request.form['rate']) })
+            message={ "message": "Your review has been updated", "type": "info" }
+        return render_template("book.html", bookdata_GR=bookdata_GR.json()["books"][0], 
+            bookdata=bookdata, review={ "review": request.form['review'], "rate": int(request.form['rate']) },
+            message=message)
 
