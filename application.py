@@ -82,10 +82,11 @@ def login():
         else:
             return render_template("login.html")
     if request.method == "POST":
-        u = db.execute("SELECT * FROM users WHERE username = :user", {"user": request.form['user']}).fetchone()
-        stored_password = u[4]
-        if check_password_hash(stored_password, request.form['password']):
-            session['username'] = u[1]
+        userdata = db.execute("SELECT * FROM users WHERE username = :user", {"user": request.form['user']}).fetchone()
+        if userdata == None:
+            return render_template('error.html', message="your password is not correct")
+        elif check_password_hash(userdata[4], request.form['password']):
+            session['username'] = userdata[1]
             return render_template('loggedin.html')
         else:
             return render_template('error.html', message="your password is not correct")
@@ -122,10 +123,26 @@ def search():
         print(results) #OR title LIKE :search OR author LIKE :search
         return render_template("search.html",results=results)
 
-@app.route("/book/<string:isbn>")
+@app.route("/book/<string:isbn>", methods=["POST", "GET"])
 @login_required
 def book(isbn):
-    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": KEY, "isbns": isbn })
-    print(res.json())
-    results = db.execute("SELECT * FROM books WHERE (isbn = :isbn)", { "isbn": isbn}).fetchone()
-    return render_template("book.html", res=res.json()["books"][0], results=results)
+    #Get bookdata from the database, bookdata_GR from google reads, and the review info
+    bookdata = db.execute("SELECT * FROM books WHERE (isbn = :isbn)", { "isbn": isbn}).fetchone()
+    bookdata_GR = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": KEY, "isbns": isbn })
+    review = db.execute("SELECT * FROM reviews WHERE username = :username AND isbn = :isbn", { "username": session['username'], "isbn": isbn }).fetchone()
+    if bookdata == None:
+        return render_template("error.html", message="The book you are looking for it does not exists")
+    if request.method == "GET" :
+        return render_template("book.html", bookdata_GR=bookdata_GR.json()["books"][0], bookdata=bookdata, review=review)
+    elif request.method == "POST":
+        print(request.form)
+        if review == None:
+            db.execute("INSERT INTO reviews ( isbn, username, review, rate) VALUES (:isbn, :username, :review, :rate )",
+                        { "isbn": isbn, "username": session['username'], "review": request.form['review'], "rate": request.form['rate'] } )
+            db.commit()
+        else:
+            db.execute("UPDATE reviews SET review = :review, rate = :rate WHERE username = :username AND isbn = :isbn",
+                        { "isbn": isbn, "username": session['username'], "review": request.form['review'], "rate": request.form['rate'] } )
+            db.commit()
+        return render_template("book.html", bookdata_GR=bookdata_GR.json()["books"][0], bookdata=bookdata, review={ "review": request.form['review'], "rate": int(request.form['rate']) })
+
