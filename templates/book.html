@@ -12,9 +12,9 @@
             
             <div class="row">
                 <div class="well well-sm">
-                    <h5>Title: <strong>{{ bookdata['title'].title() }}</strong></h5>
-                    <h5>Author: <strong>{{ bookdata['author'].title() }}</strong></h5>
-                    <h5>Year: <strong> {{ bookdata['year'] }}</strong></h5>
+                    <p>Title: <strong>{{ bookdata['title'].title() }}</strong></p>
+                    <p>Author: <strong>{{ bookdata['author'].title() }}</strong></p>
+                    <p>Year: <strong> {{ bookdata['year'] }}</strong></p>
                     <p> <a href="/search">search for other one</a> </p>
                 </div>        
             </div>
@@ -39,45 +39,58 @@
     
     {% endif %}
 
-    {% if review==None %}
-        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">   
-            <form action="" method="POST" role="form">
-                <legend>Write a review</legend>
-                <div class="form-group">
-                    
-                    <label class="radio-inline"><input type="radio" name="rate" value="5" checked>5</label>
-                    <label class="radio-inline"><input type="radio" name="rate" value="4">4</label>
-                    <label class="radio-inline"><input type="radio" name="rate" value="3">3</label>
-                    <label class="radio-inline"><input type="radio" name="rate" value="2">2</label>
-                    <label class="radio-inline"><input type="radio" name="rate" value="1">1</label>
-                </div>
-                <div class="form-group">
-                    <textarea name="review" class="form-control" rows="5" id="comment" placeholder="write your review"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">sign review</button>
-            </form>
+    {% if review %}
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">   
+                <form action="" method="POST" role="form">
+                    <legend>Write a review</legend>
+                    <div class="form-group">
+                        <label class="radio-inline"><input type="radio" name="rate" value="5" {% if review['rate'] == 5 %}{{ "checked" }}{% endif %}>5</label>
+                        <label class="radio-inline"><input type="radio" name="rate" value="4" {% if review['rate'] == 4 %}{{ "checked" }}{% endif %}>4</label>
+                        <label class="radio-inline"><input type="radio" name="rate" value="3" {% if review['rate'] == 3 %}{{ "checked" }}{% endif %}>3</label>
+                        <label class="radio-inline"><input type="radio" name="rate" value="2" {% if review['rate'] == 2 %}{{ "checked" }}{% endif %}>2</label>
+                        <label class="radio-inline"><input type="radio" name="rate" value="1" {% if review['rate'] == 1 %}{{ "checked" }}{% endif %}>1</label>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="review" class="form-control" rows="5" id="comment" placeholder="write your review">{{ review['review'] }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">update review</button>
+                </form>
+                
+            </div>
         </div>
-    </div>
     {% else %}
-        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">   
-            <form action="" method="POST" role="form">
-                <legend>Write a review</legend>
-                <div class="form-group">
-                    <label class="radio-inline"><input type="radio" name="rate" value="5" {% if review['rate'] == 5 %}{{ "checked" }}{% endif %}>5</label>
-                    <label class="radio-inline"><input type="radio" name="rate" value="4" {% if review['rate'] == 4 %}{{ "checked" }}{% endif %}>4</label>
-                    <label class="radio-inline"><input type="radio" name="rate" value="3" {% if review['rate'] == 3 %}{{ "checked" }}{% endif %}>3</label>
-                    <label class="radio-inline"><input type="radio" name="rate" value="2" {% if review['rate'] == 2 %}{{ "checked" }}{% endif %}>2</label>
-                    <label class="radio-inline"><input type="radio" name="rate" value="1" {% if review['rate'] == 1 %}{{ "checked" }}{% endif %}>1</label>
-                </div>
-                <div class="form-group">
-                    <textarea name="review" class="form-control" rows="5" id="comment" placeholder="write your review">{{ review['review'] }}</textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">sign review</button>
-            </form>
-            
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">   
+                <form action="" method="POST" role="form">
+                    <legend>Write a review</legend>
+                    <div class="form-group">
+                        
+                        <label class="radio-inline"><input type="radio" name="rate" value="5" checked>5</label>
+                        <label class="radio-inline"><input type="radio" name="rate" value="4">4</label>
+                        <label class="radio-inline"><input type="radio" name="rate" value="3">3</label>
+                        <label class="radio-inline"><input type="radio" name="rate" value="2">2</label>
+                        <label class="radio-inline"><input type="radio" name="rate" value="1">1</label>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="review" class="form-control" rows="5" id="comment" placeholder="write your review"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">sign review</button>
+                </form>
+            </div>
         </div>
-    </div>
-        
+    {% endif %}
+
+    {% if other_reviews %}
+        <div class="row">
+            <div class="col-xs-12 col-sm-10 col-md-8 col-lg-8">
+                {% for review in other_reviews %}
+                    <div class="row">
+                        <p>User: <strong>{{ review['username'].title() }}</strong></p>
+                        <p>Rate: <strong>{{ review['rate'] }}</strong></p>
+                        <p>review: <strong> {{ review['review'] }}</strong></p>
+                    </div>
+                {% endfor%}
+            </div>
+        </div>
     {% endif %}
 </div>
 {% endblock  %}

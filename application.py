@@ -132,20 +132,22 @@ def book(isbn):
     if bookdata == None:
         return render_template("error.html", message={ "message": "The book you are looking for it does not exists", "type": "warning" })
     if request.method == "GET" :
-        return render_template("book.html", bookdata_GR=bookdata_GR.json()["books"][0], bookdata=bookdata, review=review)
+        other_reviews = db.execute("SELECT * FROM reviews WHERE isbn = :isbn", { "isbn": isbn }).fetchall()
+        return render_template("book.html", bookdata_GR=bookdata_GR.json()["books"][0], bookdata=bookdata, review=review, other_reviews=other_reviews)
     elif request.method == "POST":
-        print(request.form)
         if review == None:
             db.execute("INSERT INTO reviews ( isbn, username, review, rate) VALUES (:isbn, :username, :review, :rate )",
                         { "isbn": isbn, "username": session['username'], "review": request.form['review'], "rate": request.form['rate'] } )
             db.commit()
             message={ "message": "Your review has been submited", "type": "success" }
+            other_reviews = db.execute("SELECT * FROM reviews WHERE isbn = :isbn", { "isbn": isbn }).fetchall()
         else:
             db.execute("UPDATE reviews SET review = :review, rate = :rate WHERE username = :username AND isbn = :isbn",
                         { "isbn": isbn, "username": session['username'], "review": request.form['review'], "rate": request.form['rate'] } )
             db.commit()
             message={ "message": "Your review has been updated", "type": "info" }
+            other_reviews = db.execute("SELECT * FROM reviews WHERE isbn = :isbn", { "isbn": isbn }).fetchall()
         return render_template("book.html", bookdata_GR=bookdata_GR.json()["books"][0], 
             bookdata=bookdata, review={ "review": request.form['review'], "rate": int(request.form['rate']) },
-            message=message)
+            message=message, other_reviews=other_reviews)
 
