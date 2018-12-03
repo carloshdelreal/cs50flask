@@ -1,4 +1,4 @@
-import os
+import os, requests
 
 from flask import Flask, session, render_template, request, redirect, url_for
 from flask_session import Session
@@ -8,6 +8,8 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from functools import wraps
 
 app = Flask(__name__)
+
+KEY = "CaDB8T0wy4uZdikS5yqRw"
 
 # Check for environment variable
 if not os.getenv("DATABASE_URL"):
@@ -113,10 +115,17 @@ def search():
         #print(request.form['search'])
         try:
             year = int(request.form['search'])
-            results = db.execute("SELECT * FROM books WHERE (year = :year)", { "year": year})
+            results = db.execute("SELECT * FROM books WHERE (year = :year) ORDER BY title", { "year": year}).fetchall()
         except ValueError:
             results = db.execute("SELECT * FROM books WHERE (title LIKE :search OR author LIKE :search OR isbn LIKE :search )",
-                    { "search": "%"+str(request.form['search']).lower()+"%" }).fetchall()
+                    { "search": "%" + str(request.form['search']).lower() + "%" }).fetchall()
         print(results) #OR title LIKE :search OR author LIKE :search
         return render_template("search.html",results=results)
 
+@app.route("/book/<string:isbn>")
+@login_required
+def book(isbn):
+    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": KEY, "isbns": isbn })
+    print(res.json())
+    results = db.execute("SELECT * FROM books WHERE (isbn = :isbn)", { "isbn": isbn}).fetchone()
+    return render_template("book.html", res=res.json()["books"][0], results=results)
