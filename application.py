@@ -1,6 +1,6 @@
 import os, requests
 
-from flask import Flask, session, render_template, request, redirect, url_for
+from flask import Flask, session, render_template, request, redirect, url_for, jsonify, abort
 from flask_session import Session
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import create_engine
@@ -140,14 +140,34 @@ def book(isbn):
                         { "isbn": isbn, "username": session['username'], "review": request.form['review'], "rate": request.form['rate'] } )
             db.commit()
             message={ "message": "Your review has been submited", "type": "success" }
-            other_reviews = db.execute("SELECT * FROM reviews WHERE isbn = :isbn", { "isbn": isbn }).fetchall()
+            
         else:
             db.execute("UPDATE reviews SET review = :review, rate = :rate WHERE username = :username AND isbn = :isbn",
                         { "isbn": isbn, "username": session['username'], "review": request.form['review'], "rate": request.form['rate'] } )
             db.commit()
             message={ "message": "Your review has been updated", "type": "info" }
-            other_reviews = db.execute("SELECT * FROM reviews WHERE isbn = :isbn", { "isbn": isbn }).fetchall()
+        
+        other_reviews = db.execute("SELECT * FROM reviews WHERE isbn = :isbn", { "isbn": isbn }).fetchall()
         return render_template("book.html", bookdata_GR=bookdata_GR.json()["books"][0], 
             bookdata=bookdata, review={ "review": request.form['review'], "rate": int(request.form['rate']) },
             message=message, other_reviews=other_reviews)
 
+@app.route("/api/<string:isbn>")
+def apiAccess(isbn):
+    bookdata =  db.execute("SELECT * FROM books WHERE (isbn = :isbn)", { "isbn": isbn }).fetchone()
+    review = db.execute("SELECT * FROM reviews WHERE isbn = :isbn", { "isbn": isbn }).fetchone()
+    if bookdata :
+        bdDict = { "title": bookdata['title'], 
+                "author": bookdata['author'], 
+                "year": bookdata['year'], 
+                "isbn": bookdata['isbn'], 
+                "review_count": 0, 
+                "average_score": 5.0 }
+        if review:
+            bdDict['review_count'] = float(db.execute( "SELECT COUNT (isbn) FROM reviews WHERE isbn = :isbn", { "isbn": isbn }).fetchone()[0])
+            bdDict['average_score'] = float(db.execute( "SELECT AVG (rate) FROM reviews WHERE isbn = :isbn", { "isbn" : isbn }).fetchone()[0])
+        return jsonify(bdDict)
+    else:
+        abort(404)
+
+        
