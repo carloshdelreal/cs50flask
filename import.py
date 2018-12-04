@@ -3,7 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 ##Set up the database
-engine = create_engine(os.getenv("DATABASE_URL"))
+engine = create_engine("postgres://vkzngptialablm:4beecd9c16b5bd59a24b969e59878e2f8eed497625f029c0cab9854923b00932@ec2-23-21-65-173.compute-1.amazonaws.com:5432/dcde5js7tpbi42")
 db = scoped_session(sessionmaker(bind=engine))
 
 with open('books.csv', 'r') as csvfile:
