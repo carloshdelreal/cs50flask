@@ -1,0 +1,22 @@
+$bgcolor: aquamarine;
+$font1: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+$font2: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
+#geology{
+    font-family: $font1;
+    background-color: $bgcolor;
+}
+.topic{
+    font-size: 5rem;
+    font-family: $font2
+}
+
+section {
+    p {
+        font-family: $font2;
+    }
+}
+h1 {
+    font-family: $font1;
+    font-size: 2em;
+}
