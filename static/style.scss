@@ -1,0 +1,91 @@
+#msgs>div:hover {
+  background-color: #92d6fa68;
+  border: 3px solid #81c5f59e;
+}
+
+.msg-local{
+  border: 2px solid #dedede;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  padding: 10px;
+  padding-bottom: 5px;
+  margin: 10px 0;
+  
+  .chatername{
+    text-align: left;
+  }
+  .body{
+    text-align: left;
+    padding-bottom: 5px;
+  }
+  .timestamp{
+    text-align: right;
+  }
+}
+
+.msg-remote {
+  border-color: #ccc;
+  background-color: #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  padding-bottom: 5px;
+  margin: 10px 0;
+  .chatername{
+    text-align: right;
+  }
+  .body{
+    text-align: right;
+  }
+  .timestamp{
+    text-align: left;
+  }
+}
+.msg-selected{
+  background-color: #f0252551;
+}
+.chatername{
+  font-size: 80%;
+  font-weight: bold;
+}
+.timestamp{
+  font-size: 70%;
+}
+
+@keyframes msg-delete{
+  0%{
+    opacity: 1;
+    height: 100%;
+    line-height: 100%;
+    padding: 10px;
+  }
+  75% {
+    opacity: 0;
+    height: 100%;
+    line-height: 100%;
+    padding: 10px;
+  }
+  100% {
+    opacity: 0;
+    height: 0px;
+    line-height: 0px;
+    padding: 0px;
+  }
+}
+.msg-selected{
+  animation-play-state: 'paused';
+  animation-name: msg-delete;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-play-state: paused;
+}
+#global {
+  height: 400px;
+  padding: 20;
+	border: 1px solid #ddd;
+	background: #f1f1f1;
+	overflow-y: scroll;
+}
+#msgs {
+  height: auto;
+  margin: 2%;
+}
