@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>Profile</title>
+{% endblock %}
+{% block body %}
+
+<div class="container">
+    
+    <div class="row">
+        <div class="col-xs-12 col-md-8 col-md-offset-2">
+            <div class="well">
+                <p>Profile</p>
+            </div>
+            
+        </div>
+        
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-md-8 col-md-offset-2">
+            {% if user %}
+                <h3>{{ user.username }}</h3>
+                <p>
+                    First Name: {{ user.first_name }}<br>
+                    Last Name: {{ user.last_name }}<br>
+                    Email: {{ user.email }}
+
+                </p>
+            {% else %}
+                <p>there is not a user</p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock %}

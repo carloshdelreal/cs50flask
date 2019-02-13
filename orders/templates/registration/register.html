@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>Log out!</title>
+{% endblock %}
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-md-8 col-md-offset-2">
+            <p>
+                Become a member of Pinochio's Pizza
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-md-8 col-md-offset-2">
+            <div class="well">
+                <h3>Register form</h3>
+                <form method="post">
+
+                    {% csrf_token %}
+                    <div class="row">
+                        {{ form.non_field_errors }}
+                        {{ form.username.errors }}
+                        {{ form.password.errors }}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">Username:</span>
+                                {{ form.username }}
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">First Name:</span>
+                                {{ form.first_name }}
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">Last Name:</span>
+                                {{ form.last_name }}
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">Email:</span>
+                                {{ form.email }}
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">Password:</span>
+                                {{ form.password1 }}
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">Confirm:</span>
+                                {{ form.password2 }}
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-xs-4 col-xs-offset-4 col-sm-4 col-sm-offset-4 col-md-4 col-md-offset-4">
+                            <button class="btn btn-warning btn-block" type="submit">Register Now!</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% endblock %}

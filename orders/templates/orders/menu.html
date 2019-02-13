@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% load static %}
+<script src="{% static 'orders/scriptmenu.js' %}"></script>
+
+<title>Pinocchio's Menu</title>
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+        <div class="well container-menu">
+            <h1 class="box-1">Our Menu</h1>
+            <button id="confirmOrder" class="btn btn-success box-2">confirm your order!</button>
+            
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+        
+
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+            
+            <h2>
+                Regular Pizza
+            </h2>
+            
+            <table>
+                <tbody>
+                    {% for item in regularPizza %}
+                    <tr>
+                        <td>{{ item.itemName }}</td><td>{{ item.size }}</td><td>{{ item.price }}</td>
+                        <td>
+                            <div class="input-group spinner">
+                                <input id="{{ item.id }}" type="text" class="form-control input-sm" value="0">
+                                <div class="input-group-btn-vertical">
+                                    <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                                    <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+            <h2>
+                Sicilian Pizza
+            </h2>
+                    
+            <table>
+                <tbody>
+                    {% for item in sicilianPizza %}
+                    <tr>
+                        <td>{{ item.itemName }}</td><td>{{ item.size }}</td><td>{{ item.price }}</td>
+                        <td>
+                            <div class="input-group spinner">
+                                <input id="{{ item.id }}" type="text" class="form-control input-sm" value="0">
+                                <div class="input-group-btn-vertical">
+                                    <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                                    <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+            
+        <div id="toppings" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+            <h2>
+                Toppings
+            </h2>
+            <table class="table table-sm">
+                <tbody>
+                    {% for item in toppings %}
+                    <tr>
+                        <td hidden>{{ item.id }}</td> <td>{{ item.extra }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div id="subs" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+            <h2>
+                Subs
+            </h2>
+                    
+            <table>
+                <tbody>
+                    {% for item in subs %}
+                    <tr>
+                        <td>{{ item.itemName }}</td><td>{{ item.size }}</td><td>{{ item.price }}</td>
+                        <td>
+                            <div class="input-group spinner">
+                                <input id="{{ item.id }}" type="text" class="form-control input-sm" value="0">
+                                <div class="input-group-btn-vertical">
+                                    <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                                    <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+            <h2>
+                Subs Extras
+            </h2>
+                    
+            <table class="table table-sm">
+                <tbody>
+                    {% for item in subsextras %}
+                    <tr>
+                        <td hidden>{{ item.id }}</td> <td>{{ item.extra }}</td> <td>{{ item.price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        
+            <h2>
+                Pasta
+            </h2>
+                    
+            <table>
+                <tbody>
+                    {% for item in pasta %}
+                    <tr>
+                        <td>{{ item.itemName }}</td><td>{{ item.size }}</td><td>{{ item.price }}</td>
+                        <td>
+                            <div class="input-group spinner">
+                                <input id="{{ item.id }}" type="text" class="form-control input-sm" value="0">
+                                <div class="input-group-btn-vertical">
+                                    <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                                    <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        
+            <h2>
+                Salad
+            </h2>
+                    
+            <table>
+                <tbody>
+                    {% for item in salads %}
+                    <tr>
+                        <td>{{ item.itemName }}</td><td>{{ item.size }}</td><td>{{ item.price }}</td>
+                        <td>
+                            <div class="input-group spinner">
+                                <input id="{{ item.id }}" type="text" class="form-control input-sm" value="0">
+                                <div class="input-group-btn-vertical">
+                                    <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                                    <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+            <h2>
+                Dinner Platters
+            </h2>
+                    
+            <table>
+                <tbody>
+                    {% for item in dinnerPlatters %}
+                    <tr>
+                        <td>{{ item.itemName }}</td><td>{{ item.size }}</td><td>{{ item.price }}</td>
+                        <td>
+                            <div class="input-group spinner">
+                                <input id="{{ item.id }}" type="text" class="form-control input-sm" value="0">
+                                <div class="input-group-btn-vertical">
+                                    <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                                    <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>
+<br>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_table }}
+    <input type="submit">
+</form>
+{% endblock %}

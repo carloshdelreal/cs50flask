@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load staticfiles %}
+    {% load static %}
     
+    <script language="JavaScript" src="{% static 'orders/scriptforms.js' %}"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     
     <link rel="stylesheet" type="text/css" href="{% static 'orders/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'orders/images/favico.ico' %}" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script language="JavaScript" src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
+    <script language="JavaScript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    
 
     {% block head %}
     {% endblock %}
@@ -46,8 +50,13 @@
                             <ul class="nav navbar-nav">
                                 {% if  user.is_authenticated %}
                                 <li>
-                                    <a href="">
+                                    <a href="{% url 'orders:profile' %}">
                                         <span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp; Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'orders:menu' %}">
+                                        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>&nbsp; Menu
                                     </a>
                                 </li>
                                 {% endif %}
@@ -56,13 +65,21 @@
 
                             <ul class="nav navbar-nav navbar-right">
                                 {% if  user.is_authenticated %}
+                               
                                 <li class="">
                                         <a href="">
-                                            <span aria-hidden="true">Bienvenido, {{ user }}</span>&nbsp
+                                            <span aria-hidden="true">Bienvenid@, {{ user }}</span>&nbsp
+                                        </a>
+                                </li>
+                                <li id="cart" style="display: none">
+                                        <a>
+                                            <span class="glyphicon glyphicon-comment"></span>
+                                            <span class="num">2</span>
+                                            <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span>&nbsp;
                                         </a>
                                 </li>
                                 <li class="">
-                                        <a href="">
+                                        <a href="{% url 'orders:logout' %}">
                                             <span class="glyphicon glyphicon-off" aria-hidden="true"></span>&nbsp;Logout
                                         </a>
                                 </li>
@@ -73,7 +90,7 @@
                                         </a>
                                 </li>
                                 <li class="">
-                                        <a href="" >
+                                        <a href="{% url 'orders:register' %}" >
                                             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>&nbsp;Register
                                         </a>
                                 </li>

@@ -1,0 +1,101 @@
+.spinner {
+  width: 60px;
+}
+.spinner input {
+  text-align: right;
+}
+.input-group-btn-vertical {
+  position: relative;
+  white-space: nowrap;
+  width: 1%;
+  vertical-align: middle;
+  display: table-cell;
+}
+.input-group-btn-vertical > .btn {
+  display: block;
+  float: none;
+  width: 100%;
+  max-width: 100%;
+  padding: 7px;
+  margin-left: -1px;
+  position: relative;
+  border-radius: 0;
+}
+.input-group-btn-vertical > .btn:first-child {
+  border-top-right-radius: 3px;
+}
+.input-group-btn-vertical > .btn:last-child {
+  margin-top: -2px;
+  border-bottom-right-radius: 3px;
+}
+.input-group-btn-vertical i{
+  position: absolute;
+  top: 0;
+  left: 4px;
+}
+
+table{
+  width: 100%;
+  
+}
+td{
+  height: 50%;
+  border-bottom: 1px solid rgba(187, 187, 187, 0.653);
+}
+
+#toppings, #subs{  
+  height: 420px;
+  overflow: scroll;
+      
+}
+#subs{  
+  height: 450px;      
+}
+
+
+// Flex for getting rid of the height problem in bootstrap
+.row.display-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+.row.display-flex > [class*='col-'] {
+  display: flex;
+  flex-direction: column;
+}
+
+
+// Shopping Char
+span.glyphicon-comment {
+  position: absolute;
+  font-size: 1.2em;
+  top: 4px;
+  color: red;
+  right: 6px;
+}
+span.num {
+  position: absolute;
+  font-size: 0.8em;
+  top: 1px;
+  color: #fff;
+  right: 11px;
+}
+.table-warning{
+  background-color: #999999;
+
+}
+
+.container-menu{
+  display: flex;
+  align-items: center;
+}
+.box-1{
+  flex: 3;
+}
+.box-2{
+  flex: 1;
+}
+
+///Multiselect
+.multiselect-container>li>a>label {
+  padding: 4px 20px 3px 20px;
+}

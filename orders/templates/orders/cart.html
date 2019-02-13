@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% load static %}
+<script src="{% static 'orders/handlebars-v4.0.12.js' %}"></script>
+<script src="{% static 'orders/scriptcart.js' %}"></script>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/css/bootstrap-select.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script language="JavaScript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js"></script>
+
+<title>Pinocchio's Menu</title>
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+        <div class="well container-menu">
+            <h1 class="box-1">Shopping Cart</h1>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                {{ form.non_field_errors }}
+                {{ form.item.errors }}
+                {{ form.extras.errors }}
+                {{ form.quantity.errors }}
+            </div>
+
+            <div class="row">
+                <div class="col-xs-6 col-sm-2 col-md-2">
+                    <div class="input-group input-group-sm">
+                        {{ form.itemGroup }}
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-4 col-md-4">
+                    <div class="input-group input-group-sm">
+                        {{ form.item }}
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-4 col-md-4">
+                    <div class="input-group input-group-sm">
+                        {{ form.extras }}
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-2 col-md-2">
+                    <div class="input-group input-group-sm">
+                        {{ form.quantity }}
+                    </div>
+                </div>
+            </div>
+            
+            <br>
+            <div class="row">
+                <div class="col-xs-4 col-xs-offset-4 col-sm-4 col-sm-offset-4 col-md-4 col-md-offset-4">
+                    <button class="btn btn-warning btn-block" type="submit">Register Now!</button>
+                </div>
+            </div>
+        </form>
+        
+    </div>
+</div>
+<br>
+{% endblock %}
