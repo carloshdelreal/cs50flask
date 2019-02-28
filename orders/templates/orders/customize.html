@@ -7,11 +7,45 @@
 {% block body%}
 <div class="container">
     <div class="jumbotron">
-        <h1 class="display-3">Customize</h1>
-        <p class="lead">Your order has been successfully placed</p>
-        <hr class="my-4">
-        <p>Our people is now commited to give you the order whithin 15 minutes!</p>
-        
-      </div>
+        <h2 class="display-3">Customize Your Order!!</h2>
+        <hr>
+        <form id="" method="post">
+            {% csrf_token %}
+
+            
+            <table class="table table-bordered">
+                <tr>
+                    <th>#</th>
+                    <th>Item</th>
+                    <th>Customize</th>
+                    
+                </tr>
+                {% for item in items %}
+                <tr>
+                    
+                    <td scope="row" class="col-xs-1">
+                        {{ forloop.counter }}
+                    </td>
+                    <td class="col-xs-4">
+                        {{ item.form.non_field_errors }}
+                        {{ item.form.item.errors }}
+                        {{ item.form.extra.errors }}
+                        {{ item.form.topping.errors }}
+                        <strong>{{ item.item.full_name }}</strong>
+                    </td >
+                    {% for field in item.form.visible_fields %}
+                        <td class="col-xs-4">
+                        {{ field }}
+                        {{ field.help_text }}
+                        </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </table>
+                    
+            <input type="submit" name="submit" value="Submit" />
+            <input type="submit" name="submit" value="Discard" />
+        </form>
+    </div>
 </div>
 {% endblock %}

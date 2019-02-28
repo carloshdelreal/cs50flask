@@ -12,6 +12,7 @@ class Item(models.Model):
     itemName = models.CharField(max_length=30)
     itemGroup = models.ForeignKey('ItemGroup', on_delete=models.CASCADE)
     price = models.FloatField()
+    customizable = models.BooleanField(default=False)
 
     SIZE_CHOICES = (
         ('', ''),
@@ -35,9 +36,9 @@ class Item(models.Model):
 
 class CustomItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    item = models.OneToOneField(Item, on_delete=models.CASCADE,primary_key=True)
-    extra = models.ManyToManyField('Extras')
-    topping = models.ManyToManyField('Topping')
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    extra = models.ManyToManyField('Extras', blank=True)
+    topping = models.ManyToManyField('Topping', blank=True)
 
     def _get_itemName(self):
         toppings = self.topping.all()
@@ -46,14 +47,14 @@ class CustomItem(models.Model):
         if len(extras) > 0:
             s = ""
             for e in extras:
-                s = s+ " +" + e.extra
-            return self.item.itemName + s
+                s = s+ ", Extra: " + e.extra
+            return "Sub: "+ str(self.item.itemName) + s
         elif len(toppings) > 0:
             s = ""
             for t in toppings:
                 s = s+ " +" + t.toppingName
-            return self.item.itemName + s
-        return self.item.itemName
+            return str(self.item.itemGroup.itemGroup)+": "+ str(self.item.itemName) + s
+        return str(self.item.itemGroup.itemGroup)+": "+ str(self.item.itemName)
 
     full_name = property(_get_itemName)
 
@@ -75,6 +76,22 @@ class CustomItem(models.Model):
     
     total_price = property(_get_price)
 
+    def __str__(self):
+        toppings = self.topping.all()
+        extras = self.extra.all()
+
+        if len(extras) > 0:
+            s = ""
+            for e in extras:
+                s = s+ " +" + e.extra
+            return self.item.itemName + s
+        elif len(toppings) > 0:
+            s = ""
+            for t in toppings:
+                s = s+ " +" + t.toppingName
+            return self.item.itemName + s
+        return self.item.itemName
+
 
 
 class Extras(models.Model):
@@ -82,7 +99,7 @@ class Extras(models.Model):
     price = models.FloatField()
 
     def __str__(self):
-        return "ID: " + str(self.extra) + " " + str(self.extra)
+        return "ID: " + str(self.extra)
 
 class Topping(models.Model):
     toppingName = models.CharField(max_length=30)
@@ -93,11 +110,26 @@ class Topping(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     created_date = models.DateTimeField(auto_now_add=True)
+    placed_date = models.DateTimeField(auto_now=True)
+    placed = models.BooleanField()
+    delivered = models.BooleanField()
+    items = models.ManyToManyField(CustomItem, through="SellingArticle")
     def __str__(self):
         return  "ID: " + str(self.id)
 
+    def _get_price(self):
+        itms = self.items.all()
+        priceorder = 0.0
+        for it in itms:
+            priceorder += it.total_price
+        return priceorder
+    
+    total_price = property(_get_price)
+
 class SellingArticle(models.Model):
     sell_order = models.ForeignKey('Order', on_delete=models.CASCADE)
-    item = models.ForeignKey('Item', on_delete=models.CASCADE)
+    item = models.ForeignKey('CustomItem', on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
-
+    def __str__(self):
+        return "Order: " + str(self.sell_order.id)+" "+str(self.item )
+    

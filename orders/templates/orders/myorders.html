@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>My Orders</title>
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+        <div class="well container-menu">
+            <h1 class="box-1">Your Pending Orders</h1>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+        <table class="table table-bordered">
+        {% for order, articles in articles %}
+        <tr>
+            <th colspan="2">
+                <strong> Order No: {{ order.id }}</strong> <small> Placed: {{ order.placed_date }}</small>
+                
+            </th>
+        </tr>
+        <tr>
+            <td>
+            <ul>
+                {% for article in articles %}
+                <li>
+                    {{ article.item.full_name }} x {{ article.quantity }}
+                </li>
+                {% endfor%}
+            </ul>
+            </td>
+            <td>
+                Total Price: $ {{ order.total_price }}
+            </td>
+        </tr>
+        {% empty %}
+        <h3>You have not pending orders, <a href="{% url 'orders:menu' %}">Order Now!!</a></h3>
+        {% endfor %}
+        </table>
+    </div>
+</div>
+<br>
+{% endblock %}

@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import ( AuthenticationForm, UserCreationForm )
-from orders.models import Item, Extras, SellingArticle, Order, ItemGroup
+from orders.models import Item, Extras, SellingArticle, Order, ItemGroup, CustomItem
+from django.forms.widgets import HiddenInput
 
 class LoginForm (AuthenticationForm):
     class Meta:
@@ -29,37 +30,66 @@ class RegistrationForm(UserCreationForm):
             user.save()
         return user
     
-class SellingArticleForm(forms.ModelForm):
-    # itemGroup = ItemGroup.objects.get(pk=3)
-    # item = forms.ModelChoiceField(queryset=Item.objects.filter(itemGroup__exact=itemGroup.id))
-    # extras = forms.ModelMultipleChoiceField(queryset=Extras.objects.filter(itemGroup__exact=1))
-    # itemGroup = forms.ModelChoiceField(queryset=ItemGroup.objects.filter(id__exact=itemGroup.pk))
-    class Meta:
-        model = SellingArticle
-        fields = ['item','quantity']
-    
-    def __init__(self, itemGroup, *args,**kwargs):
-        super (SellingArticleForm, self).__init__(*args,**kwargs)
-        self.fields['item'].queryset = Item.objects.filter(itemGroup__exact=itemGroup.id)
-        
-    def save(self, request, commit=True):
-        SellingArticle = super(SellingArticleForm, self).save(commit=False)
-        order = Order()
-        order.user = request.user
-        order.save()
-        SellingArticle.sell_order = order
-        SellingArticle.item = self.cleaned_data["item"]
-        SellingArticle.quantity = self.cleaned_data['quantity']
-        if commit:
-            # for i in self.cleaned_data['extras']:
-            #     eq = ExtraQuantity()
-            #     eq.quantity = 1
-            #     eq.extra = i
-            #     eq.selling = SellingArticle
-            #     eq.save()
-            SellingArticle.save()
-            
-        return SellingArticle
+       
 
 class MenuSelectedForm(forms.Form):
     orderString = forms.CharField()
+
+class CustomPizzaForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomPizzaForm, self).__init__(*args, **kwargs)
+        
+        self.fields["topping"].widget.attrs = {'class': 'form-control'}
+
+    class Meta:
+        model = CustomItem
+        fields = ["topping"]
+    
+    def clean_topping(self):
+        data = self.cleaned_data['topping']
+        #print(data)
+        #print(int(self.instance.item.itemName[:1]))
+        if len(data) == int(self.instance.item.itemName[:1]):
+            return data
+        else:
+            raise forms.ValidationError("The Number of Toppings has to coincide with the Item you are ordering, you are ordering {} and your item allows {} ".format(len(data), int(self.instance.item.itemName[:1])))
+
+
+class CustomSubForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomSubForm, self).__init__(*args, **kwargs)
+        
+        self.fields["extra"].widget.attrs = {'class': 'form-control'}
+
+    class Meta:
+        model = CustomItem
+        fields = ["extra"]
+    
+
+class OrderForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['placed'].widget = HiddenInput()
+    class Meta:
+        model = Order
+        fields = ['placed']
+        
+        
+class SellingArticleForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(SellingArticleForm, self).__init__(*args, **kwargs)
+        #self.fields["item"].disabled = True
+        #self.fields["item"].widget.attrs = {'class': 'form-control'}
+        self.fields["quantity"].widget.attrs = {'class': 'form-control'}
+        self.fields["quantity"].min_value = 1
+
+    class Meta:
+        model = SellingArticle
+        fields = ['quantity']
+
+SellingArticleFormset = forms.modelformset_factory(SellingArticle, form=SellingArticleForm, extra=0)
+
+class CustomItem_itemForm(forms.ModelForm):
+    class Meta:
+        model = CustomItem
+        fields = ['item']

@@ -59,6 +59,18 @@
                                         <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>&nbsp; Menu
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{% url 'orders:myorders' %}">
+                                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>&nbsp; My Orders
+                                    </a>
+                                </li>
+                                {% endif %}
+                                {% if user.is_staff %}
+                                <li>
+                                    <a href="{% url 'orders:pendingorders' %}">
+                                        <span class="glyphicon glyphicon-time" aria-hidden="true"></span>&nbsp; Pending Orders
+                                    </a>
+                                </li>
                                 {% endif %}
                             </ul>
 
@@ -68,7 +80,7 @@
                                
                                 <li class="">
                                         <a href="">
-                                            <span aria-hidden="true">Bienvenid@, {{ user }}</span>&nbsp
+                                            <span aria-hidden="true">Welcome, {{ user }}</span>&nbsp
                                         </a>
                                 </li>
                                 <li id="cart" style="display: none">

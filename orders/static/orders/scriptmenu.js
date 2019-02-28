@@ -74,13 +74,14 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector(".navbar-right").children[1].style.display = "none"
             document.getElementById("confirmOrder").style.display = "none"
         }
+        document.getElementById("id_orderString").value = JSON.stringify(order)
     }
 
     document.getElementById("confirmOrder").addEventListener("click", chargeItems);
-    document.getElementById("cart").addEventListener("click", chargeItems);
+    //document.getElementById("cart").addEventListener("click", chargeItems);
 
     function chargeItems (){
-        console.log(order)
+        document.querySelectorAll("input[type=submit]")[0].click()
     }
 });
 
