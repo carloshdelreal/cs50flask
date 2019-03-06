@@ -49,7 +49,12 @@ class CustomPizzaForm(forms.ModelForm):
         data = self.cleaned_data['topping']
         #print(data)
         #print(int(self.instance.item.itemName[:1]))
-        if len(data) == int(self.instance.item.itemName[:1]):
+        if self.instance.item.itemName == 'Special':
+            if len(data) == 5:
+                return data
+            else:
+                raise forms.ValidationError("Special Pizza Must to have 5 Toppings!!, you put {}".format(len(data)))
+        elif len(data) == int(self.instance.item.itemName[:1]):
             return data
         else:
             raise forms.ValidationError("The Number of Toppings has to coincide with the Item you are ordering, you are ordering {} and your item allows {} ".format(len(data), int(self.instance.item.itemName[:1])))

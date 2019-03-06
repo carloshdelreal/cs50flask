@@ -34,10 +34,10 @@ class SellingAdmin(admin.ModelAdmin):
 
 class CustomItemAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'total_price')
-    form = CustomItem_itemForm
-    def save_model(self, request, obj, form, change):
-        obj.user = request.user
-        super().save_model(request, obj, form, change)
+    #form = CustomItem_itemForm
+    # def save_model(self, request, obj, form, change):
+    #     obj.user = request.user
+    #     super().save_model(request, obj, form, change)
 
 
 
