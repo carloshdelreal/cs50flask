@@ -23,7 +23,11 @@
                     <div class="row">
                         {{ form.non_field_errors }}
                         {{ form.username.errors }}
-                        {{ form.password.errors }}
+                        {{ form.first_name.errors }}
+                        {{ form.last_name.errors }}
+                        {{ form.email.errors }}
+                        {{ form.password1.errors }}
+                        {{ form.password2.errors }}
                     </div>
 
                     <div class="row">
@@ -52,21 +56,21 @@
                             <div class="input-group">
                                 <span class="input-group-addon">Email:</span>
                                 {{ form.email }}
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i></span>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">Password:</span>
                                 {{ form.password1 }}
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">Confirm:</span>
                                 {{ form.password2 }}
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
                             </div>
                         </div>
                     </div>

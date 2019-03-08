@@ -141,7 +141,7 @@ def customizeorder(request):
         for i in itms:
             if i['form']:
                 if valid == False:
-                    form.is_valid()
+                    i['form'].is_valid()
                 else:
                     valid = i['form'].is_valid()
         if valid:
